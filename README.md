@@ -11,7 +11,8 @@
 
 ## Example
 
-`use sod::MutService;
+```rust
+use sod::MutService;
 use sod_bus::{BusBroadcaster, BusReceiver};
 
 let mut broadcaster = BusBroadcaster::with_len(1024);
@@ -29,3 +30,4 @@ assert_eq!(receiver1.process(()).unwrap(), 3);
 assert_eq!(receiver2.process(()).unwrap(), 1);
 assert_eq!(receiver2.process(()).unwrap(), 2);
 assert_eq!(receiver2.process(()).unwrap(), 3);
+```
