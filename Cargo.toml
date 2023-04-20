@@ -1,10 +1,10 @@
 [package]
 name = "sod-bus"
-version = "0.2.2"
+version = "0.2.3"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 authors = ["Eric Thill"]
-repository = "https://github.com/thill/sod"
+repository = "https://github.com/thill/sod-bus"
 description = "Service Oriented Design - Single Producer Multi Consumer"
 keywords = ["service", "pattern"]
 categories = ["rust-patterns"]
