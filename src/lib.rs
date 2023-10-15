@@ -30,7 +30,10 @@
 
 use bus::{Bus, BusReader};
 use sod::{MutService, RetryError, Retryable};
-use std::sync::mpsc::{RecvError, TryRecvError};
+use std::{
+    convert::Infallible,
+    sync::mpsc::{RecvError, TryRecvError},
+};
 
 /// A blocking [`sod::MutService`] that broadcasts to an underlying [`bus::Bus`].
 pub struct BusBroadcaster<T> {
@@ -58,9 +61,10 @@ impl<T> BusBroadcaster<T> {
         BusTryReceiver::new(self.bus.add_rx())
     }
 }
-impl<T> MutService<T> for BusBroadcaster<T> {
+impl<T> MutService for BusBroadcaster<T> {
+    type Input = T;
     type Output = ();
-    type Error = ();
+    type Error = Infallible;
     fn process(&mut self, input: T) -> Result<Self::Output, Self::Error> {
         Ok(self.bus.broadcast(input))
     }
@@ -92,7 +96,8 @@ impl<T> BusTryBroadcaster<T> {
         BusTryReceiver::new(self.bus.add_rx())
     }
 }
-impl<T> MutService<T> for BusTryBroadcaster<T> {
+impl<T> MutService for BusTryBroadcaster<T> {
+    type Input = T;
     type Output = ();
     type Error = T;
     fn process(&mut self, input: T) -> Result<Self::Output, Self::Error> {
@@ -114,7 +119,8 @@ impl<T> BusReceiver<T> {
         Self { reader }
     }
 }
-impl<T: Clone + Sync> MutService<()> for BusReceiver<T> {
+impl<T: Clone + Sync> MutService for BusReceiver<T> {
+    type Input = ();
     type Output = T;
     type Error = RecvError;
     fn process(&mut self, _: ()) -> Result<Self::Output, Self::Error> {
@@ -131,7 +137,8 @@ impl<T> BusTryReceiver<T> {
         Self { reader }
     }
 }
-impl<T: Clone + Sync> MutService<()> for BusTryReceiver<T> {
+impl<T: Clone + Sync> MutService for BusTryReceiver<T> {
+    type Input = ();
     type Output = T;
     type Error = TryRecvError;
     fn process(&mut self, _: ()) -> Result<Self::Output, Self::Error> {
